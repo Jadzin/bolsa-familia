@@ -32,7 +32,7 @@ function checarStatus(id, utms) {
       clearInterval(verificar);
       document.getElementById('statusText').innerHTML = "✅ Pagamento confirmado";
       setTimeout(() => {
-        window.location.href = `https://novobeneficiobolsa.com.br/inicio/bolsa-up2/?${utms}`;
+        window.location.href = `https://novobeneficiobolsa.com.br/inicio/bolsa-up1/?${utms}`;
       }, 2000);
     }
   }, 10000);
