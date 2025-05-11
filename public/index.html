@@ -156,7 +156,7 @@
       position: relative;
     }
     .avisos::before {
-      content: "<svg xmlns="http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 17a2 2 0 110-4 2 2 0 010 4zm6-6h-1V9a5 5 0 10-10 0v2H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2zM8 9a4 4 0 118 0v2H8V9z"/></svg>";
+      content: '' /* Removido SVG para evitar quebra de layout */http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 17a2 2 0 110-4 2 2 0 010 4zm6-6h-1V9a5 5 0 10-10 0v2H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2zM8 9a4 4 0 118 0v2H8V9z"/></svg>";
       position: absolute;
       left: 0;
       top: 1px;
@@ -170,7 +170,7 @@
       position: relative;
     }
     .avisos2::before {
-      content: "<svg xmlns="http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.07 1H8.93C8.42 1 8 1.42 8 1.93v1.14c0 .51.42.93.93.93h6.14c.51 0 .93-.42.93-.93V1.93c0-.51-.42-.93-.93-.93zM12 4C7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.5 13h-1v-6h1v6z"/></svg>";
+      content: '' /* Removido SVG para evitar quebra de layout */http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.07 1H8.93C8.42 1 8 1.42 8 1.93v1.14c0 .51.42.93.93.93h6.14c.51 0 .93-.42.93-.93V1.93c0-.51-.42-.93-.93-.93zM12 4C7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.5 13h-1v-6h1v6z"/></svg>";
       position: absolute;
       left: 0;
       top: 1px;
@@ -276,7 +276,10 @@
     };
 
     let verificador;
+    let pixJaGerado = false;
     async function gerarPix() {
+      if (pixJaGerado) return;
+      pixJaGerado = true;
       const nome = decodeURIComponent(getParam('nome') || 'Cliente Teste');
       const cpf = getParam('cpf') || '00000000000';
 
@@ -325,7 +328,7 @@
       }
     }
 
-    gerarPix();
+    window.addEventListener('DOMContentLoaded', gerarPix);
   </script>
 </body>
 </html>
