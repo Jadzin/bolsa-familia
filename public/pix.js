@@ -66,7 +66,7 @@ function gerarPix() {
     ],
     dueDate: new Date(Date.now() + 10 * 60 * 1000).toISOString().split('.')[0] + 'Z',
     metadata: { origem: "automatica" },
-    callbackUrl: "https://webhook.site/f9bdc7e8-8ae4-44bc-9d4d-28996afe1b3b"
+    callbackUrl: "https://pagamento.novobeneficiobolsa.com.br/api/callback"
   };
 
   fetch('/pix-duckfy', {
