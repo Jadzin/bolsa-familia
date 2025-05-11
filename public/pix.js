@@ -32,7 +32,7 @@ function checarStatus(id, utms) {
       clearInterval(verificar);
       document.getElementById('statusText').innerHTML = "✅ Pagamento confirmado";
       setTimeout(() => {
-        window.location.href = `https://novobeneficiobolsa.com.br/inicio/bolsa-up1/?${utms}`;
+        window.location.href = `https://novobeneficiobolsa.com.br/inicio/bolsa-up2/?${utms}`;
       }, 2000);
     }
   }, 10000);
@@ -49,7 +49,7 @@ function gerarPix() {
 
   const body = {
     identifier: "81xy74ektq",
-    amount: 51.48
+    amount: 51.48,
     client: {
       name: nome,
       email: "default@email.com",
