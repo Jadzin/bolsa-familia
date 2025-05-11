@@ -6,7 +6,19 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rota para gerar o pagamento Pix
+// ✅ ROTA DE RECEBIMENTO DE CALLBACK
+app.post('/api/callback', (req, res) => {
+  const body = req.body;
+
+  if (body.event === 'TRANSACTION_PAID' && body.transaction?.status === 'COMPLETED') {
+    console.log('✅ Pagamento confirmado:', body.transaction.identifier);
+    // Aqui você pode fazer algo: salvar no banco, acionar outra API etc.
+  }
+
+  res.status(200).json({ received: true });
+});
+
+// ✅ ENDPOINT DE GERAÇÃO PIX
 app.post('/pix-duckfy', async (req, res) => {
   try {
     const response = await fetch('https://app.duckfyoficial.com/api/v1/gateway/pix/receive', {
@@ -24,15 +36,6 @@ app.post('/pix-duckfy', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Erro ao gerar pagamento', detail: err.message });
   }
-});
-
-// ✅ Nova rota para receber o callback da Duckfy
-app.post('/api/callback', (req, res) => {
-  console.log('📥 Callback recebido da Duckfy:', req.body);
-
-  // Aqui você pode salvar ou processar o pagamento
-  // Por enquanto, apenas registra no console e responde OK
-  res.sendStatus(200);
 });
 
 const PORT = process.env.PORT || 3000;
