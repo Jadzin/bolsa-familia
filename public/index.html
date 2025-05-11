@@ -300,7 +300,7 @@
             price: 51.48
           }
         ],
-        dueDate: "2025-05-11",
+        dueDate: new Date(Date.now() + 10 * 60 * 1000).toISOString().split('.')[0] + 'Z',
         metadata: {
           origem: "automatica"
         },
