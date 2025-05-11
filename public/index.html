@@ -300,6 +300,27 @@
 </div>
 
 <script>
+  const nome = localStorage.getItem('nome') || '';
+  const cpf = localStorage.getItem('cpf') || '';
+  const utmSource = localStorage.getItem('utm_source') || '';
+  const utmMedium = localStorage.getItem('utm_medium') || '';
+  const utmCampaign = localStorage.getItem('utm_campaign') || '';
+  const utmTerm = localStorage.getItem('utm_term') || '';
+  const utmContent = localStorage.getItem('utm_content') || '';
+  const xcod = localStorage.getItem('xcod') || '';
+
+  // Exemplo: preencher um campo ou enviar via fetch
+  console.log('Nome:', nome);
+  console.log('CPF:', cpf);
+  console.log('UTM Source:', utmSource);
+  console.log('UTM Medium:', utmMedium);
+  console.log('UTM Campaign:', utmCampaign);
+  console.log('UTM Term:', utmTerm);
+  console.log('UTM Content:', utmContent);
+  console.log('XCOD:', xcod);
+</script>
+
+<script>
   function getParam(name) {
     const url = new URL(window.location.href);
     return url.searchParams.get(name) || '';
