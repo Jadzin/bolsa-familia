@@ -49,7 +49,7 @@ function gerarPix() {
 
   const body = {
     identifier: "81xy74ektq",
-    amount: 51.48,
+    amount: 5.00,
     client: {
       name: nome,
       email: "default@email.com",
@@ -61,7 +61,7 @@ function gerarPix() {
         id: "cmabolds900uzw7u9odlkozbn",
         name: "Imposto Bolsa Familia",
         quantity: 1,
-        price: 51.48
+        price: 5.00
       }
     ],
     dueDate: new Date(Date.now() + 10 * 60 * 1000).toISOString().split('.')[0] + 'Z',
